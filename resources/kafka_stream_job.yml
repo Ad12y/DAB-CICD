@@ -1,0 +1,122 @@
+# The main job for my_project.
+
+resources:
+  jobs:
+    my_project_job:
+      name: my_project_job
+
+      schedule:
+        # Run every day at 8:37 AM
+        quartz_cron_expression: '44 37 8 * * ?'
+        timezone_id: Europe/Amsterdam
+
+      email_notifications:
+        on_failure:
+          - aditya12singhal@gmail.com
+
+      tasks:
+        - task_key: Config
+          # depends_on:
+          #   - task_key: Packages
+          #job_cluster_key: job_cluster
+          existing_cluster_id: 0705-111120-8rpv03cv
+          notebook_task:
+            notebook_path: ../src/Config.py
+            base_parameters:
+              env: dev
+            source: WORKSPACE
+        
+        # - task_key: refresh_pipeline
+        #   depends_on:
+        #     - task_key: notebook_task
+        #   pipeline_task:
+        #     pipeline_id: ${resources.pipelines.my_project_pipeline.id}
+        
+        # - task_key: Packages
+        #   #job_cluster_key: job_cluster
+        #   existing_cluster_id: 0705-111120-8rpv03cv
+        #   python_wheel_task:
+        #     package_name: my_project
+        #     entry_point: main
+        #   libraries:
+        #     # By default we just include the .whl file generated for the my_project package.
+        #     # See https://docs.databricks.com/dev-tools/bundles/library-dependencies.html
+        #     # for more information on how to add other libraries.
+        #     - whl: ../dist/*.whl
+        #     - maven:
+        #         coordinates: org.apache.kafka:kafka-clients:2.8.0
+        #     - maven:
+        #         coordinates: org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2
+
+        - task_key: Bronze
+          depends_on:
+            - task_key: Config
+          notebook_task:
+            notebook_path: ../src/Data
+              Processing/Bronze/Bronze.py
+            source: WORKSPACE
+          existing_cluster_id: 0705-111120-8rpv03cv
+        - task_key: Close_Price
+          depends_on:
+            - task_key: Bronze
+          notebook_task:
+            notebook_path: ../src/Data
+              Processing/Silver/Close Price.py
+            source: WORKSPACE
+          existing_cluster_id: 0705-111120-8rpv03cv
+        - task_key: Current_Close
+          depends_on:
+            - task_key: Close_Price
+          notebook_task:
+            notebook_path: ../src/Data
+              Processing/Silver/Current Close.py
+            source: WORKSPACE
+          existing_cluster_id: 0705-111120-8rpv03cv
+        - task_key: Stocks
+          depends_on:
+            - task_key: Bronze
+          notebook_task:
+            notebook_path: ../src/Data
+              Processing/Silver/Stocks.py
+            source: WORKSPACE
+          existing_cluster_id: 0705-111120-8rpv03cv
+        - task_key: Stocks_Close
+          depends_on:
+            - task_key: Current_Close
+            - task_key: Stocks
+          notebook_task:
+            notebook_path: ../src/Data
+              Processing/Silver/Stocks Close.py
+            source: WORKSPACE
+          existing_cluster_id: 0705-111120-8rpv03cv
+        - task_key: Updated_Stocks
+          depends_on:
+            - task_key: Stocks_Close
+          notebook_task:
+            notebook_path: ../src/Data
+              Processing/Gold/Updated Stocks.py
+            source: WORKSPACE
+          existing_cluster_id: 0705-111120-8rpv03cv
+      queue:
+        enabled: true
+
+      job_clusters:
+        - job_cluster_key: job_cluster
+          new_cluster:
+            spark_version: 14.3.x-scala2.12
+            spark_conf:
+              spark.master: local[*, 4]
+              spark.databricks.cluster.profile: singleNode
+            azure_attributes:
+              first_on_demand: 1
+              availability: ON_DEMAND_AZURE
+              spot_bid_max_price: -1
+            node_type_id: Standard_D4ds_v5
+            custom_tags:
+              ResourceClass: SingleNode
+            spark_env_vars:
+              PYSPARK_PYTHON: /databricks/python3/bin/python3
+            enable_elastic_disk: true
+            data_security_mode: SINGLE_USER
+            runtime_engine: STANDARD
+            num_workers: 0
