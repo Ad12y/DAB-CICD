@@ -3,12 +3,18 @@
 bundle:
   name: kafka_stream
 
+variables:
+  area: 
+
 include:
   - resources/*.yml
+
 
 targets:
   # The 'dev' target, for development purposes. This target is the default.
   dev:
+    variables:
+      area: dev
     # We use 'mode: development' to indicate this is a personal development copy:
     # - Deployed resources get prefixed with '[dev my_user_name]'
     # - Any job schedules and triggers are paused by default
@@ -27,6 +33,8 @@ targets:
 
   # The 'prod' target, used for production deployment.
   prod:
+    variables:
+      area: prod
     # We use 'mode: production' to indicate this is a production deployment.
     # Doing so enables strict verification of the settings below.
     mode: production
