@@ -5,6 +5,7 @@ bundle:
 
 variables:
   area: 
+  cluster_id:
 
 include:
   - resources/*.yml
@@ -15,6 +16,7 @@ targets:
   dev:
     variables:
       area: dev
+      cluster_id: 0705-111120-8rpv03cv
     # We use 'mode: development' to indicate this is a personal development copy:
     # - Deployed resources get prefixed with '[dev my_user_name]'
     # - Any job schedules and triggers are paused by default
@@ -35,11 +37,12 @@ targets:
   prod:
     variables:
       area: prod
+      cluster_id: 0727-202542-ytijy491
     # We use 'mode: production' to indicate this is a production deployment.
     # Doing so enables strict verification of the settings below.
     mode: production
     workspace:
-      host: https://adb-500647211230238.18.azuredatabricks.net
+      host: https://adb-2858730946334185.5.azuredatabricks.net
       # We always use /Users/aditya12singhal@gmail.com for all resources to make sure we only have a single copy.
       # If this path results in an error, please make sure you have a recent version of the CLI installed.
       root_path: /Users/aditya12singhal@gmail.com/.bundle/${bundle.name}/${bundle.target}

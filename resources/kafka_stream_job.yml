@@ -19,7 +19,12 @@ resources:
           # depends_on:
           #   - task_key: Packages
           #job_cluster_key: job_cluster
-          existing_cluster_id: 0705-111120-8rpv03cv
+          existing_cluster_id: ${var.cluster_id}
+          libraries:
+            - maven:
+                coordinates: org.apache.kafka:kafka-clients:2.8.0
+            - maven:
+                coordinates: org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2
           notebook_task:
             notebook_path: ../src/Config.py
             base_parameters:
@@ -34,7 +39,7 @@ resources:
         
         # - task_key: Packages
         #   #job_cluster_key: job_cluster
-        #   existing_cluster_id: 0705-111120-8rpv03cv
+        #   existing_cluster_id: ${var.cluster_id}
         #   python_wheel_task:
         #     package_name: my_project
         #     entry_point: main
@@ -55,7 +60,7 @@ resources:
             notebook_path: ../src/Data
               Processing/Bronze/Bronze.py
             source: WORKSPACE
-          existing_cluster_id: 0705-111120-8rpv03cv
+          existing_cluster_id: ${var.cluster_id}
         - task_key: Close_Price
           depends_on:
             - task_key: Bronze
@@ -63,7 +68,7 @@ resources:
             notebook_path: ../src/Data
               Processing/Silver/Close Price.py
             source: WORKSPACE
-          existing_cluster_id: 0705-111120-8rpv03cv
+          existing_cluster_id: ${var.cluster_id}
         - task_key: Current_Close
           depends_on:
             - task_key: Close_Price
@@ -71,7 +76,7 @@ resources:
             notebook_path: ../src/Data
               Processing/Silver/Current Close.py
             source: WORKSPACE
-          existing_cluster_id: 0705-111120-8rpv03cv
+          existing_cluster_id: ${var.cluster_id}
         - task_key: Stocks
           depends_on:
             - task_key: Bronze
@@ -79,7 +84,7 @@ resources:
             notebook_path: ../src/Data
               Processing/Silver/Stocks.py
             source: WORKSPACE
-          existing_cluster_id: 0705-111120-8rpv03cv
+          existing_cluster_id: ${var.cluster_id}
         - task_key: Stocks_Close
           depends_on:
             - task_key: Current_Close
@@ -88,7 +93,7 @@ resources:
             notebook_path: ../src/Data
               Processing/Silver/Stocks Close.py
             source: WORKSPACE
-          existing_cluster_id: 0705-111120-8rpv03cv
+          existing_cluster_id: ${var.cluster_id}
         - task_key: Updated_Stocks
           depends_on:
             - task_key: Stocks_Close
@@ -96,7 +101,7 @@ resources:
             notebook_path: ../src/Data
               Processing/Gold/Updated Stocks.py
             source: WORKSPACE
-          existing_cluster_id: 0705-111120-8rpv03cv
+          existing_cluster_id: ${var.cluster_id}
       queue:
         enabled: true
 
