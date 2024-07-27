@@ -22,8 +22,8 @@ resources:
           existing_cluster_id: 0705-111120-8rpv03cv
           notebook_task:
             notebook_path: ../src/Config.py
-            # base_parameters:
-            #   env: dev
+            base_parameters:
+              env: ${var.env}
             source: WORKSPACE
         
         # - task_key: refresh_pipeline
