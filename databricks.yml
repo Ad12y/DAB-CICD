@@ -3,6 +3,9 @@
 bundle:
   name: kafka_stream
 
+variables:
+  area: 
+
 include:
   - resources/*.yml
 
