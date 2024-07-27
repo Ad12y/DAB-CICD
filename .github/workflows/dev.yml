@@ -25,7 +25,7 @@ jobs:
 
       - uses: databricks/setup-cli@main
 
-      - run: export BUNDLE_VAR_env=dev
+      - run: export env=dev
 
       - run: databricks bundle deploy 
         env:
