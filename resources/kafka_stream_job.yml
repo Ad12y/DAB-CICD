@@ -23,7 +23,7 @@ resources:
           notebook_task:
             notebook_path: ../src/Config.py
             base_parameters:
-              env: ${var.env}
+              env: ${var.area}
             source: WORKSPACE
         
         # - task_key: refresh_pipeline
