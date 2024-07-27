@@ -25,9 +25,7 @@ jobs:
 
       - uses: databricks/setup-cli@main
 
-      - run: export env=dev
-
-      - run: databricks bundle deploy 
+      - run: databricks bundle deploy
         env:
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
           DATABRICKS_BUNDLE_ENV: dev
@@ -56,7 +54,7 @@ jobs:
         name: Run pipeline update
         run: |
           set -o pipefail
-          databricks bundle run kafka_stream_job --var="env=dev" --refresh-all 2>&1 | tee output.log
+          databricks bundle run kafka_stream_job --refresh-all 2>&1 | tee output.log
         env:
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
           DATABRICKS_BUNDLE_ENV: dev
