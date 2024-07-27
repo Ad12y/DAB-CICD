@@ -39,7 +39,7 @@ jobs:
 
       - uses: databricks/setup-cli@main
 
-      - run: databricks bundle run fe_medium_metrics --refresh-all
+      - run: databricks bundle run kafka_stream_job --refresh-all
         env:
           DATABRICKS_TOKEN: ${{ secrets.E2_DEMO_WEST_TOKEN }}
           DATABRICKS_BUNDLE_ENV: production
