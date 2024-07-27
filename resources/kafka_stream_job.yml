@@ -2,8 +2,8 @@
 
 resources:
   jobs:
-    my_project_job:
-      name: my_project_job
+    kafka_stream_job:
+      name: kafka_stream_job
 
       schedule:
         # Run every day at 8:37 AM
