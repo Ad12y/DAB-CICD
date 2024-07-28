@@ -15,7 +15,7 @@ from pyspark.sql import functions as F
 
 # Define the DataFrame for current_close_silver
 current_close_df = spark.sql(
-    f"SELECT `Index` as Index_cc, Close as Close_cc, Adj_Close as Adj_Close_cc FROM {env}.silver.stocks_close_silver"
+    f"SELECT `Index` as Index_cc, Close as Close_cc, Adj_Close as Adj_Close_cc FROM {env}.silver.current_close_silver"
 )
 
 # Create the streaming query
